@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import Search from "../components/Search";
 import axios from "axios";
+import Search from "../components/Search";
 import Picture from "../components/Picture";
 
 const Homepage = () => {
   let [data, setData] = useState("");
-  let [input, setInput] = useState(null);
+  let [input, setInput] = useState("");
   let [page, setPage] = useState(1);
   let [currentSearch, setCurrentSearch] = useState("");
   const apiKey = process.env.REACT_APP_API_KEY;
@@ -23,10 +23,8 @@ const Homepage = () => {
 
   //更多圖片
   const morePicture = async () => {
-    console.log("page現在為 : ", page);
     let newURL;
     setPage(page + 1);
-    console.log("setPage後,page現在為 : ", page);
     if (currentSearch === "") {
       newURL = `https://api.pexels.com/v1/curated?page=${page + 1}&per_page=15`;
     } else {
@@ -34,8 +32,7 @@ const Homepage = () => {
         page + 1
       }&per_page=15`;
     }
-    console.log("In the morePicture");
-    console.log(newURL);
+
     let result = await axios.get(newURL, {
       headers: { Authorization: apiKey },
     });
@@ -51,7 +48,11 @@ const Homepage = () => {
     <div style={{ minHeight: "100vh" }}>
       <Search
         search={() => {
-          search(searchURL);
+          if (!input.trim()) {
+            return;
+          } else {
+            search(searchURL);
+          }
         }}
         setInput={setInput}
       />
